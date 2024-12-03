@@ -3,6 +3,9 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:note/controllers/auths/update_user_controller.dart';
 import 'package:note/controllers/auths/user_controller.dart';
+import 'package:note/controllers/notes/note_controller.dart';
+import 'package:note/views/screens/view_all_important_note_screen.dart';
+import 'package:note/views/screens/view_all_normal_note_screen.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -11,6 +14,8 @@ class ProfileScreen extends StatelessWidget {
   final _userController = Get.put(UserController());
   final _updateUserController = Get.put(UpdateUserController());
   final _formKey = GlobalKey<FormState>();
+
+  final _noteController = Get.put(NoteController());
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +29,7 @@ class ProfileScreen extends StatelessWidget {
         title: Text(
           'Profile',
           style: GoogleFonts.kantumruyPro(
-            fontSize: 20.0,
+            fontSize: 18.0,
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
@@ -42,7 +47,7 @@ class ProfileScreen extends StatelessWidget {
                 Text(
                   'Personal information',
                   style: GoogleFonts.kantumruyPro(
-                    fontSize: 20.0,
+                    fontSize: 15.0,
                     fontWeight: FontWeight.bold,
                     color: Theme.of(context).primaryColor,
                   ),
@@ -382,13 +387,158 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 ),
 
+                // contents
+                const SizedBox(height: 30.0),
+                Text(
+                  'Contents',
+                  style: GoogleFonts.kantumruyPro(
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ),
+
+                // important note
+                const SizedBox(height: 10.0),
+                GestureDetector(
+                  onTap: _noteController.importantNoteList.isEmpty
+                    ? null
+                    : (){
+                      Get.to(
+                        () => ViewAllImportantNoteScreen(),
+                        transition: Transition.rightToLeftWithFade,
+                      );
+                    },
+                  child: GetBuilder<NoteController>(
+                    builder: (_) {
+
+                      // track  count importantNoteList
+                      int count = _noteController.importantNoteList.length;
+
+                      return Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20.0,
+                          vertical: 15.0,
+                        ),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: Colors.pink.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              count == 0
+                                  ? 'Oops, 🤭 no important note!'
+                                  : 'Important ${count == 1 ? 'note' : 'notes'} ($count)',
+                              style: GoogleFonts.kantumruyPro(
+                                fontSize: 15.0,
+                                fontWeight: count == 0
+                                  ? FontWeight.normal
+                                  : FontWeight.bold,
+                                color: Colors.pink,
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  count == 0 ? '' : 'View all',
+                                  style: GoogleFonts.kantumruyPro(
+                                    fontSize: 13.0,
+                                    color: Colors.pink,
+                                  ),
+                                ),
+                                if (count > 0) ...[
+                                  const SizedBox(width: 5.0),
+                                  Icon(
+                                    Icons.arrow_forward_rounded,
+                                    color: Colors.pink,
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+
+                // normal note
+                const SizedBox(height: 10.0),
+                GestureDetector(
+                  onTap: _noteController.normalNoteList.isEmpty
+                    ? null
+                    : (){
+                      Get.to(
+                        () => ViewAllNormalNoteScreen(),
+                        transition: Transition.rightToLeftWithFade,
+                      );
+                    },
+                  child: GetBuilder<NoteController>(
+                    builder: (_) {
+
+                      // track  count normalNoteList
+                      int count = _noteController.normalNoteList.length;
+
+                      return Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20.0,
+                          vertical: 15.0,
+                        ),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              count == 0
+                                  ? 'Oops, 🤭 no normal note!'
+                                  : 'Normal ${count == 1 ? 'note' : 'notes'} ($count)',
+                              style: GoogleFonts.kantumruyPro(
+                                fontSize: 15.0,
+                                fontWeight: count == 0
+                                  ? FontWeight.normal
+                                  : FontWeight.bold,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  count == 0 ? '' : 'View all',
+                                  style: GoogleFonts.kantumruyPro(
+                                    fontSize: 13.0,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                ),
+                                if (count > 0) ...[
+                                  const SizedBox(width: 5.0),
+                                  Icon(
+                                    Icons.arrow_forward_rounded,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+
 
                 // preferences
-                const SizedBox(height: 40.0),
+                const SizedBox(height: 30.0),
                 Text(
                   'Preferences',
                   style: GoogleFonts.kantumruyPro(
-                    fontSize: 20.0,
+                    fontSize: 15.0,
                     fontWeight: FontWeight.bold,
                     color: Theme.of(context).primaryColor,
                   ),
@@ -497,7 +647,7 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: Colors.pink.withOpacity(0.1),
+                      color: Colors.red.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                     child: Row(
@@ -508,12 +658,12 @@ class ProfileScreen extends StatelessWidget {
                           style: GoogleFonts.kantumruyPro(
                             fontSize: 15.0,
                             fontWeight: FontWeight.bold,
-                            color: Colors.pink,
+                            color: Colors.red,
                           ),
                         ),
                         Icon(
                           Icons.delete_forever,
-                          color:Colors.pink,
+                          color:Colors.red,
                         ),
                       ],
                     ),

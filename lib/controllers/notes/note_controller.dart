@@ -14,7 +14,14 @@ class NoteController extends GetxController {
   final _userController = Get.put(UserController());
   final _noteService = NoteService();
 
+  // for all notes | important & normal
   List<NoteModel> noteList = [];
+
+  // for all important notes
+  List<NoteModel> importantNoteList = [];
+
+  // for all normal notes
+  List<NoteModel> normalNoteList = [];
 
   final searchController = TextEditingController();
   List<NoteModel> searchedList = [];
@@ -23,11 +30,15 @@ class NoteController extends GetxController {
 
   bool isGettingNotes = false;
   bool isDeletingNote = false;
+  bool isGettingImportantNote = false;
+  bool isGettingNormalNote = false;
 
   @override
   void onInit() {
     super.onInit();
     getAllNotes();
+    getAllImportantNotes();
+    getAllNormalNotes();
     loadSearchNoteHistory();
   }
 
@@ -241,6 +252,63 @@ class NoteController extends GetxController {
     }
   }
 
+
+  // get all important notes
+  Future<void> getAllImportantNotes() async {
+    final userId = _userController.currentUser?.uid;
+    try {
+      isGettingImportantNote = true;
+      update();
+
+      // subscribe to the note stream
+      await for (var updatedNotes in _noteService.getImportantNotesStream(userId: userId!)) {
+        importantNoteList = updatedNotes;
+        isGettingImportantNote = false;
+        update();
+      }
+    } catch (e) {
+      showMessage(
+        msg: 'Failed to fetch important notes: $e',
+        bgColor: Colors.pink,
+        txtColor: Colors.white,
+        fontSize: 12.0,
+        fontWeight: FontWeight.normal,
+      );
+      debugPrint('Failed to fetch important notes: 👉 $e');
+
+      isGettingImportantNote = false;
+      update();
+    }
+  }
+
+  // get all normal notes
+  Future<void> getAllNormalNotes() async {
+    final userId = _userController.currentUser?.uid;
+    try {
+      isGettingNormalNote = true;
+      update();
+
+      // subscribe to the note stream
+      await for (var updatedNotes in _noteService.getNormalNotesStream(userId: userId!)) {
+        normalNoteList = updatedNotes;
+        isGettingNormalNote = false;
+        update();
+      }
+    } catch (e) {
+      showMessage(
+        msg: 'Failed to fetch normal notes: $e',
+        bgColor: Colors.pink,
+        txtColor: Colors.white,
+        fontSize: 12.0,
+        fontWeight: FontWeight.normal,
+      );
+      debugPrint('Failed to fetch normal notes: 👉 $e');
+
+      isGettingNormalNote = false;
+      update();
+    }
+  }
+
   // delete note by noteId
   Future<void> deleteNote({
     required String noteId,
@@ -257,6 +325,12 @@ class NoteController extends GetxController {
 
       // remove the note from the `noteList`
       noteList.removeWhere((note) => note.id == noteId);
+
+      // remove the note from the `importantNoteList`
+      importantNoteList.removeWhere((importantNote) => importantNote.id == noteId);
+
+      // remove the note from the `normalNoteList`
+      normalNoteList.removeWhere((normalNote) => normalNote.id == noteId);
 
       // remove the note from the `searchedList`
       searchedList.removeWhere((searchedNote) => searchedNote.id == noteId);

@@ -73,7 +73,9 @@ class CreateNoteController extends GetxController {
       );
 
       // refresh the Notes data
-      await Get.put(NoteController()).getAllNotes();
+      Get.put(NoteController()).getAllNotes();
+      Get.put(NoteController()).getAllImportantNotes();
+      Get.put(NoteController()).getAllNormalNotes();
 
       clearTextField();
 

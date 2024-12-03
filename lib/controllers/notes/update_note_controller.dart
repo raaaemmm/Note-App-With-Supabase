@@ -125,6 +125,11 @@ class UpdateNoteController extends GetxController {
       // update the controller
       noteController.update();
 
+
+      // refresh get Important & Normal notes
+      Get.put(NoteController()).getAllImportantNotes();
+      Get.put(NoteController()).getAllNormalNotes();
+
       showMessage(
         msg: 'Note updated successfully!',
         txtColor: Colors.white,

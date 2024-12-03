@@ -42,6 +42,8 @@ class NoteScreen extends StatelessWidget {
           ],
         ),
         actions: [
+
+          // search note
           GestureDetector(
             onTap: (){
               Get.to(

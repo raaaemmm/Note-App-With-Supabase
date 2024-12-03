@@ -77,6 +77,38 @@ class NoteService {
     );
   }
 
+  // get only important notes for a single user
+  Stream<List<NoteModel>> getImportantNotesStream({
+    required String userId,
+  }) {
+    return _client
+        .from(notesTable)
+        .select()
+        .eq('user_id', userId)
+        .eq('is_important', true) // filter for important notes
+        .order('create_date', ascending: false)
+        .asStream()
+        .map(
+          (data) => data.map((noteMap) => NoteModel.fromMap(noteMap)).toList(),
+        );
+  }
+
+  // get only normal notes for a single user
+  Stream<List<NoteModel>> getNormalNotesStream({
+    required String userId,
+  }) {
+    return _client
+        .from(notesTable)
+        .select()
+        .eq('user_id', userId)
+        .eq('is_important', false) // filter for normal notes
+        .order('create_date', ascending: false)
+        .asStream()
+        .map(
+          (data) => data.map((noteMap) => NoteModel.fromMap(noteMap)).toList(),
+        );
+  }
+
   // update a note by noteId
   Future<void> updateNote({
     required String noteId,
