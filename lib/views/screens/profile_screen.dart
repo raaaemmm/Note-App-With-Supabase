@@ -318,17 +318,13 @@ class ProfileScreen extends StatelessWidget {
                                         ),
                                       ),
                                       TextButton(
-                                        onPressed: () {
-                                          if(_updateUserController.isUpdatingUser){
-                                            return;
-                                          } else {
-                                            if (_formKey.currentState!.validate()) {
+                                        onPressed: _updateUserController.isUpdatingUser
+                                          ? null
+                                          : (){
+                                            if(_formKey.currentState!.validate()){
                                               _updateUserController.updateUser();
-                                            } else {
-                                              // nothing here
                                             }
-                                          }
-                                        },
+                                          },
                                         child: Text(
                                           _updateUserController.isUpdatingUser ? 'Updating...' : 'Update',
                                           style: GoogleFonts.kantumruyPro(

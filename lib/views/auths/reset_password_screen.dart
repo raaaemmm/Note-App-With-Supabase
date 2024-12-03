@@ -103,24 +103,28 @@ class ResetPasswordScreen extends StatelessWidget {
                       // Sign-In button
                       const SizedBox(height: 50.0),
                       GestureDetector(
-                        onTap: () {
-                          if (_formKey.currentState!.validate()) {
-                            _resetPWController.resetPassword();
-                          } else {
-                            // nothing here
-                          }
-                        },
+                        onTap: _resetPWController.isResetingPW
+                          ? null
+                          : (){
+                            if(_formKey.currentState!.validate()){
+                              _resetPWController.resetPassword();
+                            }
+                          },
                         child: Container(
                           alignment: Alignment.center,
                           height: 45.0,
                           width: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
-                            color: Theme.of(context).primaryColor,
+                            color: _resetPWController.isResetingPW
+                              ? Theme.of(context).primaryColor.withOpacity(0.1)
+                              : Theme.of(context).primaryColor,
                             borderRadius: BorderRadius.circular(10.0),
                           ),
                           child: _resetPWController.isResetingPW
                               ? LoadingAnimationWidget.inkDrop(
-                                  color: Colors.white,
+                                  color: _resetPWController.isResetingPW
+                                    ? Theme.of(context).primaryColor
+                                    : Colors.white,
                                   size: 20.0,
                                 )
                               : Text(

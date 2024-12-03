@@ -245,17 +245,13 @@ class CreateNoteScreen extends StatelessWidget {
 
                 // create note button
                 GestureDetector(
-                  onTap: () {
-                    if(_createNoteController.isCreating){
-                      return;
-                    } else {
-                      if (_formKey.currentState!.validate()) {
+                  onTap: _createNoteController.isCreating
+                    ? null
+                    : (){
+                      if(_formKey.currentState!.validate()){
                         _createNoteController.createNote();
-                      } else {
-                        // nothing here
                       }
-                    }
-                  },
+                    },
                   child: Padding(
                     padding: EdgeInsets.all(15.0),
                     child: Container(
@@ -263,12 +259,16 @@ class CreateNoteScreen extends StatelessWidget {
                       height: 45.0,
                       width: MediaQuery.of(context).size.width,
                       decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor,
+                        color: _createNoteController.isCreating
+                          ? Theme.of(context).primaryColor.withOpacity(0.1)
+                          : Theme.of(context).primaryColor,
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       child: _createNoteController.isCreating
                           ? LoadingAnimationWidget.inkDrop(
-                              color: Colors.white,
+                              color: _createNoteController.isCreating
+                                ? Theme.of(context).primaryColor
+                                : Colors.white,
                               size: 20.0,
                             )
                           : Text(

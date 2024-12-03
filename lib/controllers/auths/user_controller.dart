@@ -46,6 +46,9 @@ class UserController extends GetxController {
 
   // SIGN-OUT
   Future<void> signOut() async {
+    
+    if(isSignningOut) return;
+
     try {
       isSignningOut = true;
       update();
@@ -89,7 +92,7 @@ class UserController extends GetxController {
       final dateTime = DateTime.tryParse(createdAt);
       if (dateTime != null) {
         // Format the date as "Friday, 29 November 2024 | 3:40 PM"
-        final formattedDate = DateFormat('EEEE, d-MMMM-yyyy | h:mm a').format(dateTime);
+        final formattedDate = DateFormat('EEEE, d-MMMM-yyyy').format(dateTime);
         return formattedDate;
       }
       return createdAt;

@@ -37,6 +37,9 @@ class SignUpController extends GetxController {
 
   // SIGN-UP
   Future<void> signUp() async {
+    
+    if(isSignningUp) return;
+
     try {
       isSignningUp = true;
       update();

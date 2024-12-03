@@ -27,6 +27,9 @@ class ResetPasswordController extends GetxController {
 
   // reset Password
   Future<void> resetPassword() async {
+    
+    if(isResetingPW) return;
+
     try {
       isResetingPW = true;
       update();

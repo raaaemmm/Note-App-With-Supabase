@@ -33,6 +33,10 @@ class CreateNoteController extends GetxController {
 
   Future<void> createNote() async {
 
+    // check if the controller is already in a creating state
+    if (isCreating) return;
+
+    // validate inputs
     if (
       selectedCategory.isEmpty || titleController.text.trim().isEmpty || descriptionController.text.trim().isEmpty
     ) {

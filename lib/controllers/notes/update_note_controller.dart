@@ -72,6 +72,11 @@ class UpdateNoteController extends GetxController {
   Future<void> updateNote({
     required String noteId,
   }) async {
+
+    // check if the controller is already in a updating state
+    if(isUpdating) return;
+
+    // validate input
     if (
       selectedCategory.isEmpty || titleController.text.trim().isEmpty || descriptionController.text.trim().isEmpty
     ) {

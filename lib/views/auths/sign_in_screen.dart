@@ -142,24 +142,28 @@ class SignInScreen extends StatelessWidget {
                       // Sign-In button
                       SizedBox(height: 50.0),
                       GestureDetector(
-                        onTap: () {
-                          if (_formKey.currentState!.validate()) {
-                            _signInController.signIn();
-                          } else {
-                            // nothing here
-                          }
-                        },
+                        onTap: _signInController.isSignningIn
+                          ? null
+                          : (){
+                            if(_formKey.currentState!.validate()){
+                              _signInController.signIn();
+                            }
+                          },
                         child: Container(
                           alignment: Alignment.center,
                           height: 45.0,
                           width: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
-                            color: Theme.of(context).primaryColor,
+                            color: _signInController.isSignningIn
+                              ? Theme.of(context).primaryColor.withOpacity(0.1)
+                              : Theme.of(context).primaryColor,
                             borderRadius: BorderRadius.circular(10.0),
                           ),
                           child: _signInController.isSignningIn
                               ? LoadingAnimationWidget.inkDrop(
-                                  color: Colors.white,
+                                  color: _signInController.isSignningIn
+                                    ? Theme.of(context).primaryColor
+                                    : Colors.white,
                                   size: 20.0,
                                 )
                               : Text(

@@ -249,17 +249,13 @@ class UpdateNoteScreen extends StatelessWidget {
       
                 // create note button
                 GestureDetector(
-                  onTap: () {
-                    if(_updateNoteController.isUpdating){
-                      return;
-                    } else {
-                      if (_formKey.currentState!.validate()) {
+                  onTap: _updateNoteController.isUpdating
+                    ? null
+                    : (){
+                      if(_formKey.currentState!.validate()){
                         _updateNoteController.updateNote(noteId: note.id);
-                      } else {
-                        // nothing here
                       }
-                    }
-                  },
+                    },
                   child: Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: Container(
@@ -267,12 +263,16 @@ class UpdateNoteScreen extends StatelessWidget {
                       height: 45.0,
                       width: MediaQuery.of(context).size.width,
                       decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor,
+                        color: _updateNoteController.isUpdating
+                          ? Theme.of(context).primaryColor.withOpacity(0.1)
+                          : Theme.of(context).primaryColor,
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       child: _updateNoteController.isUpdating
                           ? LoadingAnimationWidget.inkDrop(
-                              color: Colors.white,
+                              color: _updateNoteController.isUpdating
+                                ? Theme.of(context).primaryColor
+                                : Colors.white,
                               size: 20.0,
                             )
                           : Text(

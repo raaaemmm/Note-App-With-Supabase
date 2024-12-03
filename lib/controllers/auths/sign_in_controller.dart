@@ -35,6 +35,9 @@ class SignInController extends GetxController {
 
   // SIGN-IN
   Future<void> signIn() async {
+    
+    if(isSignningIn) return;
+
     try {
       isSignningIn = true;
       update();
