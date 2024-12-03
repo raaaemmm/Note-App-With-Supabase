@@ -245,6 +245,9 @@ class NoteController extends GetxController {
   Future<void> deleteNote({
     required String noteId,
   }) async {
+
+    if(isDeletingNote) return;
+    
     try {
       isDeletingNote = true;
       update();

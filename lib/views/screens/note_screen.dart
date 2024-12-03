@@ -219,9 +219,11 @@ class NoteScreen extends StatelessWidget {
                                           ),
                                         ),
                                         TextButton(
-                                          onPressed: () {
-                                            _noteController.deleteNote(noteId: note.id);
-                                          },
+                                          onPressed: _noteController.isDeletingNote
+                                            ? null
+                                            : (){
+                                              _noteController.deleteNote(noteId: note.id);
+                                            },
                                           child: Text(
                                             _noteController.isDeletingNote
                                                 ? 'Deleting...'
