@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,7 +8,10 @@ import 'package:intl/intl.dart';
 import 'package:note/controllers/auths/user_controller.dart';
 import 'package:note/models/note_model.dart';
 import 'package:note/services/note_service.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:syncfusion_flutter_xlsio/xlsio.dart';
 
 class NoteController extends GetxController {
   
@@ -32,6 +36,8 @@ class NoteController extends GetxController {
   bool isDeletingNote = false;
   bool isGettingImportantNote = false;
   bool isGettingNormalNote = false;
+
+  bool isExporting = false;
 
   @override
   void onInit() {
@@ -380,6 +386,70 @@ class NoteController extends GetxController {
       ).toList(),
     );
     update();
+  }
+
+  // export all notes into excel file
+  Future<void> exportAllNotesToExcel() async {
+
+    if(isExporting) return;
+
+    try {
+      isExporting = true;
+      update();
+
+      // create a new Excel workbook
+      final workbook = Workbook();
+      final sheet = workbook.worksheets[0];
+
+      // headers
+      sheet.getRangeByIndex(1, 1).setText('ID');
+      sheet.getRangeByIndex(1, 2).setText('Title');
+      sheet.getRangeByIndex(1, 3).setText('Description');
+      sheet.getRangeByIndex(1, 4).setText('Category');
+      sheet.getRangeByIndex(1, 5).setText('Is-Important');
+      sheet.getRangeByIndex(1, 6).setText('Created Date');
+
+      // data rows
+      int rowIndex = 2;
+      for (var note in noteList) {
+        sheet.getRangeByIndex(rowIndex, 1).setText(note.id);
+        sheet.getRangeByIndex(rowIndex, 2).setText(note.title);
+        sheet.getRangeByIndex(rowIndex, 3).setText(note.description);
+        sheet.getRangeByIndex(rowIndex, 4).setText(note.category);
+        sheet.getRangeByIndex(rowIndex, 5).setText(note.isImportant.toString());
+        sheet.getRangeByIndex(rowIndex, 6).setDateTime(note.createDate);
+        rowIndex++;
+      }
+
+      // save the Excel file
+      final List<int> bytes = workbook.saveAsStream();
+      final String path = (await getExternalStorageDirectory())!.path;
+      final String fileName = '$path/Notes.xlsx';
+      final File file = File(fileName);
+      await file.writeAsBytes(bytes, flush: true);
+
+      // share the Excel file
+      await Share.shareXFiles(
+        [XFile(fileName)],
+        text: 'Exported all notes in account: ${_userController.currentUser?.email ?? 'N/A'}',
+      );
+    } catch (e) {
+
+      // show error message
+      showMessage(
+        msg: 'Oops! error exporting All Notes: $e',
+        txtColor: Colors.white,
+        bgColor: Colors.pink,
+        fontSize: 12.0,
+        fontWeight: FontWeight.normal,
+      );
+
+      debugPrint('Oops! error exporting All Notes: 👉 $e');
+
+    } finally {
+      isExporting = false;
+      update();
+    }
   }
 
   // convert createdAt to a formatted string

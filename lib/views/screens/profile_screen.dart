@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:note/controllers/auths/update_user_controller.dart';
 import 'package:note/controllers/auths/user_controller.dart';
 import 'package:note/controllers/notes/note_controller.dart';
@@ -525,6 +526,54 @@ class ProfileScreen extends StatelessWidget {
                                 ],
                               ],
                             ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+
+
+                // save & export all notes into Excel
+                const SizedBox(height: 10.0),
+                GestureDetector(
+                  onTap: _noteController.isExporting
+                    ? null
+                    : (){
+                      _noteController.exportAllNotesToExcel();
+                    },
+                  child: GetBuilder<NoteController>(
+                    builder: (_) {
+                      return Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20.0,
+                          vertical: 15.0,
+                        ),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              _noteController.isExporting ? 'Exporting...' : 'Export all notes to Excel file',
+                              style: GoogleFonts.kantumruyPro(
+                                fontSize: 15.0,
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
+                            _noteController.isExporting
+                              ? LoadingAnimationWidget.inkDrop(
+                                  color: Theme.of(context).primaryColor,
+                                  size: 15.0,
+                                )
+                              : Icon(
+                                  Icons.import_export_rounded,
+                                  color: Theme.of(context).primaryColor,
+                                ),
                           ],
                         ),
                       );
