@@ -408,6 +408,7 @@ class NoteController extends GetxController {
       sheet.getRangeByIndex(1, 4).setText('Category');
       sheet.getRangeByIndex(1, 5).setText('Is-Important');
       sheet.getRangeByIndex(1, 6).setText('Created Date');
+      sheet.getRangeByIndex(1, 7).setText('Updated Date');
 
       // data rows
       int rowIndex = 2;
@@ -416,8 +417,9 @@ class NoteController extends GetxController {
         sheet.getRangeByIndex(rowIndex, 2).setText(note.title);
         sheet.getRangeByIndex(rowIndex, 3).setText(note.description);
         sheet.getRangeByIndex(rowIndex, 4).setText(note.category);
-        sheet.getRangeByIndex(rowIndex, 5).setText(note.isImportant.toString());
-        sheet.getRangeByIndex(rowIndex, 6).setDateTime(note.createDate);
+        sheet.getRangeByIndex(rowIndex, 5).setText(note.isImportant ? 'Yes' : 'No');
+        sheet.getRangeByIndex(rowIndex, 6).setText(formatDate(createdAt: note.createDate.toLocal().toIso8601String()));
+        sheet.getRangeByIndex(rowIndex, 7).setText(formatDate(createdAt: note.updateDate.toLocal().toIso8601String()));
         rowIndex++;
       }
 
