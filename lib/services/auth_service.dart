@@ -112,23 +112,23 @@ class AuthService {
     }
   }
 
-  // reset password by sending a reset email | not configure yet!
-  Future<void> resetPassword({
+  // send password reset email with deep link concept
+  Future<void> sendPasswordResetEmail({
     required String email,
   }) async {
     try {
       await _client.auth.resetPasswordForEmail(
         email,
-        redirectTo: 'https://your-app-url/reset-password', // Replace with your redirect URL
+        redirectTo: 'supabase.noteapp://reset-password',
       );
       debugPrint('Password reset email sent to $email.');
     } catch (e) {
-      _handleAuthException(e, 'Reset password process failed');
+      _handleAuthException(e, 'Failed to send reset password email');
     }
   }
 
-  // handle reset password after redirect
-  Future<void> handleResetPassword({
+  // handle password reset after redirect
+  Future<void> handlePasswordReset({
     required String newPassword,
   }) async {
     try {

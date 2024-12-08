@@ -101,25 +101,40 @@ class ProfileScreen extends StatelessWidget {
                           textAlign: TextAlign.center,
                           style: GoogleFonts.kantumruyPro(
                             fontSize: 13.0,
+                            fontWeight: FontWeight.w500,
                             color: Theme.of(context).primaryColor.withOpacity(0.8),
                           ),
                         ),
 
                       // Date of birth: Show only if it exists
-                      if (_userController.currentUser?.dateOfBirth != null)
-                        Text(
-                          'Birthday 🎂 : ${_userController.formatDate(
-                            createdAt: _userController.currentUser!.dateOfBirth!.toLocal().toIso8601String(),
-                          )}',
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.kantumruyPro(
-                            fontSize: 13.0,
-                            color: Theme.of(context).primaryColor.withOpacity(0.8),
-                          ),
+                      if (_userController.currentUser?.dateOfBirth != null && _userController.currentUser!.dateOfBirth!.toIso8601String().isNotEmpty)
+                        Column(
+                          children: [
+
+                            const SizedBox(height: 10.0),
+                            Text(
+                              '🎂 Birthday 🎉',
+                              style: GoogleFonts.kantumruyPro(
+                                fontSize: 15.0,
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
+                            Text(
+                              _userController.formatDate(
+                                createdAt: _userController.currentUser!.dateOfBirth!.toLocal().toIso8601String(),
+                              ),
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.kantumruyPro(
+                                fontSize: 13.0,
+                                color: Theme.of(context).primaryColor.withOpacity(0.8),
+                              ),
+                            ),
+                          ],
                         ),
 
                       // Update Profile button
-                      const SizedBox(height: 25.0),
+                      const SizedBox(height: 20.0),
                       GestureDetector(
                         onTap: () {
                           showDialog(
@@ -426,41 +441,46 @@ class ProfileScreen extends StatelessWidget {
                           color: Colors.pink.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              count == 0
-                                  ? 'Oops, 🤭 no important note!'
-                                  : 'Important ${count == 1 ? 'note' : 'notes'} ($count)',
-                              style: GoogleFonts.kantumruyPro(
-                                fontSize: 15.0,
-                                fontWeight: count == 0
-                                  ? FontWeight.normal
-                                  : FontWeight.bold,
-                                color: Colors.pink,
-                              ),
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  count == 0 ? '' : 'View all',
-                                  style: GoogleFonts.kantumruyPro(
-                                    fontSize: 13.0,
-                                    color: Colors.pink,
-                                  ),
+                        child: _noteController.isGettingImportantNote
+                        ? LoadingAnimationWidget.inkDrop(
+                            color: Colors.pink,
+                            size: 15.0,
+                          )
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                count == 0
+                                    ? 'Oops, 🤭 no important note available!'
+                                    : 'Important ${count == 1 ? 'note' : 'notes'} ($count)',
+                                style: GoogleFonts.kantumruyPro(
+                                  fontSize: 15.0,
+                                  fontWeight: count == 0
+                                    ? FontWeight.normal
+                                    : FontWeight.bold,
+                                  color: Colors.pink,
                                 ),
-                                if (count > 0) ...[
-                                  const SizedBox(width: 5.0),
-                                  Icon(
-                                    Icons.arrow_forward_rounded,
-                                    color: Colors.pink,
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    count == 0 ? '' : 'View all',
+                                    style: GoogleFonts.kantumruyPro(
+                                      fontSize: 13.0,
+                                      color: Colors.pink,
+                                    ),
                                   ),
+                                  if (count > 0) ...[
+                                    const SizedBox(width: 5.0),
+                                    Icon(
+                                      Icons.arrow_forward_rounded,
+                                      color: Colors.pink,
+                                    ),
+                                  ],
                                 ],
-                              ],
-                            ),
-                          ],
-                        ),
+                              ),
+                            ],
+                          ),
                       );
                     },
                   ),
@@ -493,57 +513,65 @@ class ProfileScreen extends StatelessWidget {
                           color: Theme.of(context).primaryColor.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              count == 0
-                                  ? 'Oops, 🤭 no normal note!'
-                                  : 'Normal ${count == 1 ? 'note' : 'notes'} ($count)',
-                              style: GoogleFonts.kantumruyPro(
-                                fontSize: 15.0,
-                                fontWeight: count == 0
-                                  ? FontWeight.normal
-                                  : FontWeight.bold,
-                                color: Theme.of(context).primaryColor,
-                              ),
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  count == 0 ? '' : 'View all',
-                                  style: GoogleFonts.kantumruyPro(
-                                    fontSize: 13.0,
-                                    color: Theme.of(context).primaryColor,
-                                  ),
+                        child: _noteController.isGettingNormalNote
+                        ? LoadingAnimationWidget.inkDrop(
+                            color: Theme.of(context).primaryColor,
+                            size: 15.0,
+                          )
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                count == 0
+                                    ? 'Oops, 🤭 no normal note available!'
+                                    : 'Normal ${count == 1 ? 'note' : 'notes'} ($count)',
+                                style: GoogleFonts.kantumruyPro(
+                                  fontSize: 15.0,
+                                  fontWeight: count == 0
+                                    ? FontWeight.normal
+                                    : FontWeight.bold,
+                                  color: Theme.of(context).primaryColor,
                                 ),
-                                if (count > 0) ...[
-                                  const SizedBox(width: 5.0),
-                                  Icon(
-                                    Icons.arrow_forward_rounded,
-                                    color: Theme.of(context).primaryColor,
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    count == 0 ? '' : 'View all',
+                                    style: GoogleFonts.kantumruyPro(
+                                      fontSize: 13.0,
+                                      color: Theme.of(context).primaryColor,
+                                    ),
                                   ),
+                                  if (count > 0) ...[
+                                    const SizedBox(width: 5.0),
+                                    Icon(
+                                      Icons.arrow_forward_rounded,
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                                  ],
                                 ],
-                              ],
-                            ),
-                          ],
-                        ),
+                              ),
+                            ],
+                          ),
                       );
                     },
                   ),
                 ),
 
-
                 // save & export all notes into Excel
                 const SizedBox(height: 10.0),
                 GestureDetector(
-                  onTap: _noteController.isExporting
-                    ? null
-                    : (){
-                      _noteController.exportAllNotesToExcel();
-                    },
+                  onTap: _noteController.noteList.isEmpty || _noteController.isExporting
+                      ? null
+                      : () {
+                          _noteController.exportAllNotesToExcel();
+                        },
                   child: GetBuilder<NoteController>(
                     builder: (_) {
+
+                      // track count noteList
+                      int count = _noteController.noteList.length;
+
                       return Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 20.0,
@@ -554,33 +582,47 @@ class ProfileScreen extends StatelessWidget {
                           color: Theme.of(context).primaryColor.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              _noteController.isExporting ? 'Exporting...' : 'Export all notes to Excel file',
-                              style: GoogleFonts.kantumruyPro(
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.bold,
+                        child: _noteController.isGettingNotes
+                            ? LoadingAnimationWidget.inkDrop(
                                 color: Theme.of(context).primaryColor,
+                                size: 15.0,
+                              )
+                            : Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    _noteController.isExporting
+                                        ? 'Exporting...'
+                                        : count == 0
+                                            ? 'Oops, 🤭 no note available!'
+                                            : 'Export ${count == 1
+                                                ? '($count) note' 
+                                                : 'all ($count) notes'} to Excel file',
+                                    style: GoogleFonts.kantumruyPro(
+                                      fontSize: 15.0,
+                                      fontWeight: count == 0
+                                        ? FontWeight.normal 
+                                        : FontWeight.bold,
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                                  ),
+                                  if (count > 0) ...[
+                                    _noteController.isExporting
+                                        ? LoadingAnimationWidget.inkDrop(
+                                            color: Theme.of(context).primaryColor,
+                                            size: 15.0,
+                                          )
+                                        : Icon(
+                                            Icons.import_export_rounded,
+                                            color: Theme.of(context).primaryColor,
+                                          ),
+                                  ],
+                                ],
                               ),
-                            ),
-                            _noteController.isExporting
-                              ? LoadingAnimationWidget.inkDrop(
-                                  color: Theme.of(context).primaryColor,
-                                  size: 15.0,
-                                )
-                              : Icon(
-                                  Icons.import_export_rounded,
-                                  color: Theme.of(context).primaryColor,
-                                ),
-                          ],
-                        ),
                       );
                     },
                   ),
                 ),
-
 
                 // preferences
                 const SizedBox(height: 30.0),

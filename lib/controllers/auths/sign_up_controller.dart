@@ -53,8 +53,8 @@ class SignUpController extends GetxController {
       if (user != null) {
         showMessage(
           msg: 'Signed up successfully!',
-          bgColor: Colors.white,
-          txtColor: Color(0xFF140F2D),
+          bgColor: Color(0xFF140F2D),
+          txtColor: Colors.white,
           fontSize: 12.0,
           fontWeight: FontWeight.normal,
         );

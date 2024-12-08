@@ -30,6 +30,8 @@ class UserController extends GetxController {
 
         // refresh Note Data Real-Time when user Signed
         Get.put(NoteController()).getAllNotes();
+        Get.put(NoteController()).getAllNormalNotes();
+        Get.put(NoteController()).getAllImportantNotes();
       } else {
         // if user is signed out, reset the current user
         _currentUser = null;

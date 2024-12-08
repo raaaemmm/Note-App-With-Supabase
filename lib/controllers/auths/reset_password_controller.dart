@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:note/controllers/auths/new_password_controller.dart';
 import 'package:note/services/auth_service.dart';
 
 class ResetPasswordController extends GetxController {
 
   final _authService = AuthService();
-  
-  bool isResetingPW = false;
   final emailController = TextEditingController();
+
+  bool isSendingResetEmail = false;
 
   @override
   void onClose() {
@@ -16,45 +17,49 @@ class ResetPasswordController extends GetxController {
     super.onClose();
   }
 
-  void clearTextField (){
+  void clearTextFields() {
     emailController.clear();
     update();
   }
 
-  bool showAndHideClearButton(){
+  bool shouldShowClearButton() {
     return emailController.text.trim().isNotEmpty;
   }
 
-  // reset Password
-  Future<void> resetPassword() async {
-    
-    if(isResetingPW) return;
+  // send Password Reset Email
+  Future<void> sendPasswordResetEmail() async {
+    if (isSendingResetEmail) return;
 
     try {
-      isResetingPW = true;
+      isSendingResetEmail = true;
       update();
 
-      await _authService.resetPassword(email: emailController.text.trim());
+      await _authService.sendPasswordResetEmail(email: emailController.text.trim());
+
       showMessage(
         msg: 'Password reset link sent to ${emailController.text.trim()}!',
-        bgColor: Color(0xFF140F2D),
+        bgColor: const Color(0xFF140F2D),
         txtColor: Colors.white,
         fontSize: 12.0,
         fontWeight: FontWeight.normal,
       );
 
-      clearTextField();
+      clearTextFields();
+
+      // inite password controller before it running
+      Get.put(NewPasswordController());
+
     } catch (e) {
       showMessage(
-        msg: 'Error: $e',
+        msg: 'Oops, $e',
         bgColor: Colors.pink,
         txtColor: Colors.white,
         fontSize: 12.0,
         fontWeight: FontWeight.normal,
       );
-      debugPrint('Error resetting password: 👉 $e');
+      debugPrint('Error sending password reset email: 👉 $e');
     } finally {
-      isResetingPW = false;
+      isSendingResetEmail = false;
       update();
     }
   }
@@ -81,5 +86,4 @@ class ResetPasswordController extends GetxController {
     );
     ScaffoldMessenger.of(Get.context!).showSnackBar(snackBar);
   }
-
 }

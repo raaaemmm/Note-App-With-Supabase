@@ -69,10 +69,10 @@ class ResetPasswordScreen extends StatelessWidget {
                                 Icons.email,
                                 color: Theme.of(context).primaryColor,
                               ),
-                              suffixIcon: _resetPWController.showAndHideClearButton()
+                              suffixIcon: _resetPWController.shouldShowClearButton()
                                 ? IconButton(
                                     onPressed: () {
-                                      _resetPWController.clearTextField();
+                                      _resetPWController.clearTextFields();
                                     },
                                     icon: Icon(
                                       Icons.clear,
@@ -103,11 +103,11 @@ class ResetPasswordScreen extends StatelessWidget {
                       // Sign-In button
                       const SizedBox(height: 50.0),
                       GestureDetector(
-                        onTap: _resetPWController.isResetingPW
+                        onTap: _resetPWController.isSendingResetEmail
                           ? null
                           : (){
                             if(_formKey.currentState!.validate()){
-                              _resetPWController.resetPassword();
+                              _resetPWController.sendPasswordResetEmail();
                             }
                           },
                         child: Container(
@@ -115,14 +115,14 @@ class ResetPasswordScreen extends StatelessWidget {
                           height: 45.0,
                           width: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
-                            color: _resetPWController.isResetingPW
+                            color: _resetPWController.isSendingResetEmail
                               ? Theme.of(context).primaryColor.withOpacity(0.1)
                               : Theme.of(context).primaryColor,
                             borderRadius: BorderRadius.circular(10.0),
                           ),
-                          child: _resetPWController.isResetingPW
+                          child: _resetPWController.isSendingResetEmail
                               ? LoadingAnimationWidget.inkDrop(
-                                  color: _resetPWController.isResetingPW
+                                  color: _resetPWController.isSendingResetEmail
                                     ? Theme.of(context).primaryColor
                                     : Colors.white,
                                   size: 20.0,

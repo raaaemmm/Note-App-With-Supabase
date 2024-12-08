@@ -7,6 +7,7 @@ import 'package:note/views/screens/create_note_screen.dart';
 import 'package:note/views/screens/search_note_screen.dart';
 import 'package:note/views/screens/update_note_screen.dart';
 import 'package:readmore/readmore.dart';
+import 'package:shimmer/shimmer.dart';
 
 class NoteScreen extends StatelessWidget {
   NoteScreen({super.key});
@@ -144,11 +145,175 @@ class NoteScreen extends StatelessWidget {
             child: GetBuilder<NoteController>(
               builder: (_) {
                 if(_noteController.isGettingNotes){
-                  return Center(
-                    child: LoadingAnimationWidget.inkDrop(
-                      color: Theme.of(context).primaryColor,
-                      size: 15.0,
-                    ),
+                  return ListView.builder(
+                    itemCount: 10,
+                    padding: EdgeInsets.all(15.0),
+                    itemBuilder: (context, index) {
+                      return Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                          side: BorderSide.none,
+                        ),
+                        child: Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+
+                            // notes
+                            Container(
+                              width: MediaQuery.of(context).size.width,
+                              padding: EdgeInsets.all(15.0),
+                              margin: const EdgeInsets.all(3.0),
+                              decoration: BoxDecoration(
+                                color: index == 0
+                                  ? Colors.pink.withOpacity(0.1)
+                                  : Theme.of(context).primaryColor.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                            
+                                  // note title
+                                  Container(
+                                    height: 10.0,
+                                    width: MediaQuery.of(context).size.width / 2.0,
+                                    decoration: BoxDecoration(
+                                      color: index == 0
+                                        ? Colors.pink.withOpacity(0.1)
+                                        : Theme.of(context).primaryColor.withOpacity(0.1),
+                                      borderRadius: BorderRadius.circular(50.0),
+                                    ),
+                                  ),
+                            
+                                  // groups
+                                  const SizedBox(height: 10.0),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                            
+                                      // note description
+                                      // first line
+                                      Container(
+                                        height: 8.0,
+                                        width: MediaQuery.of(context).size.width / 1.5,
+                                        decoration: BoxDecoration(
+                                          color: index == 0
+                                            ? Colors.pink.withOpacity(0.1)
+                                            : Theme.of(context).primaryColor.withOpacity(0.1),
+                                          borderRadius: BorderRadius.circular(50.0),
+                                        ),
+                                      ),
+                            
+                                      // note description
+                                      // second line
+                                      const SizedBox(height: 3.0),
+                                      Container(
+                                        height: 8.0,
+                                        width: MediaQuery.of(context).size.width / 1.3,
+                                        decoration: BoxDecoration(
+                                          color: index == 0
+                                            ? Colors.pink.withOpacity(0.1)
+                                            : Theme.of(context).primaryColor.withOpacity(0.1),
+                                          borderRadius: BorderRadius.circular(50.0),
+                                        ),
+                                      ),
+                            
+                                      // note description
+                                      // third line
+                                      const SizedBox(height: 3.0),
+                                      Container(
+                                        height: 8.0,
+                                        width: MediaQuery.of(context).size.width,
+                                        decoration: BoxDecoration(
+                                          color: index == 0
+                                            ? Colors.pink.withOpacity(0.1)
+                                            : Theme.of(context).primaryColor.withOpacity(0.1),
+                                          borderRadius: BorderRadius.circular(50.0),
+                                        ),
+                                      ),
+                            
+                                      // category & created date
+                                      const SizedBox(height: 10.0),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                        children: [
+                            
+                                          // category
+                                          Container(
+                                            height: 8.0,
+                                            width: 80.0,
+                                            decoration: BoxDecoration(
+                                              color: index == 0
+                                                ? Colors.pink.withOpacity(0.1)
+                                                : Theme.of(context).primaryColor.withOpacity(0.1),
+                                              borderRadius: BorderRadius.circular(50.0),
+                                            ),
+                                          ),
+                            
+                                          // created date
+                                          Container(
+                                            height: 8.0,
+                                            width: 150.0,
+                                            decoration: BoxDecoration(
+                                              color: index == 0
+                                                ? Colors.pink.withOpacity(0.1)
+                                                : Theme.of(context).primaryColor.withOpacity(0.1),
+                                              borderRadius: BorderRadius.circular(50.0),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            // check isImportant or not
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+
+                                // left indicator
+                                Container(
+                                  width: 5.0,
+                                  height: 55.0,
+                                  margin: const EdgeInsets.all(3.0),
+                                  decoration: BoxDecoration(
+                                    color: index == 0
+                                      ? Colors.pink
+                                      : Theme.of(context).primaryColor,
+                                    borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(8.0),
+                                      bottomRight: Radius.circular(8.0),
+                                    ),
+                                  ),
+                                ),
+
+                                // Right icon (circle dot) for the first note
+                                if (index == 0)
+                                  Container(
+                                    width: 20.0,
+                                    height: 20.0,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      color: Colors.pink,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: const Icon(
+                                      Icons.contact_support_sharp,
+                                      color: Colors.white,
+                                      size: 15.0,
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      );
+                    },
                   );
                 } else if (_noteController.noteList.isEmpty){
                   return Center(
@@ -276,7 +441,7 @@ class NoteScreen extends StatelessWidget {
                                         note.title,
                                         style: GoogleFonts.kantumruyPro(
                                           fontSize: 15.0,
-                                          color: note.isImportant
+                                          color: note.isImportant 
                                             ? Colors.pink
                                             : Theme.of(context).primaryColor,
                                           fontWeight: FontWeight.bold,
