@@ -1,0 +1,2 @@
+D:/Flutter with Supabase/note/android/app/.cxx/Debug/yp2z2g64/x86_64/CMakeFiles/edit_cache.dir
+D:/Flutter with Supabase/note/android/app/.cxx/Debug/yp2z2g64/x86_64/CMakeFiles/rebuild_cache.dir

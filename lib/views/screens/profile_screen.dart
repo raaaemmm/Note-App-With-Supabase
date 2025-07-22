@@ -5,6 +5,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:note/controllers/auths/update_user_controller.dart';
 import 'package:note/controllers/auths/user_controller.dart';
 import 'package:note/controllers/notes/note_controller.dart';
+import 'package:note/views/auths/sign_in_screen.dart';
 import 'package:note/views/screens/view_all_important_note_screen.dart';
 import 'package:note/views/screens/view_all_normal_note_screen.dart';
 import 'package:shimmer/shimmer.dart';
@@ -61,8 +62,8 @@ class ProfileScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        Theme.of(context).primaryColor.withOpacity(0.1),
-                        Colors.pink.withOpacity(0.1),
+                        Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                        Colors.pink.withValues(alpha: 0.1),
                       ],
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
@@ -90,7 +91,7 @@ class ProfileScreen extends StatelessWidget {
                         _userController.currentUser?.email ?? '',
                         style: GoogleFonts.kantumruyPro(
                           fontSize: 15.0,
-                          color: Theme.of(context).primaryColor.withOpacity(0.8),
+                          color: Theme.of(context).primaryColor.withValues(alpha: 0.8),
                         ),
                       ),
 
@@ -102,7 +103,7 @@ class ProfileScreen extends StatelessWidget {
                           style: GoogleFonts.kantumruyPro(
                             fontSize: 13.0,
                             fontWeight: FontWeight.w500,
-                            color: Theme.of(context).primaryColor.withOpacity(0.8),
+                            color: Theme.of(context).primaryColor.withValues(alpha: 0.8),
                           ),
                         ),
 
@@ -127,7 +128,7 @@ class ProfileScreen extends StatelessWidget {
                               textAlign: TextAlign.center,
                               style: GoogleFonts.kantumruyPro(
                                 fontSize: 13.0,
-                                color: Theme.of(context).primaryColor.withOpacity(0.8),
+                                color: Theme.of(context).primaryColor.withValues(alpha: 0.8),
                               ),
                             ),
                           ],
@@ -186,7 +187,7 @@ class ProfileScreen extends StatelessWidget {
                                                     fontSize: 13.0,
                                                     color: Theme.of(context).primaryColor,
                                                   ),
-                                                  fillColor: Colors.black.withOpacity(0.1),
+                                                  fillColor: Colors.black.withValues(alpha: 0.1),
                                                   filled: true,
                                                   hintText: 'Name',
                                                   hintStyle: GoogleFonts.kantumruyPro(
@@ -224,7 +225,7 @@ class ProfileScreen extends StatelessWidget {
                                                     fontSize: 13.0,
                                                     color: Theme.of(context).primaryColor,
                                                   ),
-                                                  fillColor: Colors.black.withOpacity(0.1),
+                                                  fillColor: Colors.black.withValues(alpha: 0.1),
                                                   filled: true,
                                                   hintText: 'Gender',
                                                   hintStyle: GoogleFonts.kantumruyPro(
@@ -261,7 +262,7 @@ class ProfileScreen extends StatelessWidget {
                                                     fontSize: 13.0,
                                                     color: Theme.of(context).primaryColor,
                                                   ),
-                                                  fillColor: Colors.black.withOpacity(0.1),
+                                                  fillColor: Colors.black.withValues(alpha: 0.1),
                                                   filled: true,
                                                   hintText: 'Short Bio',
                                                   hintStyle: GoogleFonts.kantumruyPro(
@@ -283,7 +284,7 @@ class ProfileScreen extends StatelessWidget {
                                                   // Open a DatePicker
                                                   DateTime? pickedDate = await showDatePicker(
                                                     barrierDismissible: true,
-                                                    barrierColor: Theme.of(context).primaryColor.withOpacity(0.1),
+                                                    barrierColor: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                                                     context: context,
                                                     initialDate: DateTime.now(),
                                                     firstDate: DateTime(1900), // Set the minimum year
@@ -311,7 +312,7 @@ class ProfileScreen extends StatelessWidget {
                                                     fontSize: 13.0,
                                                     color: Theme.of(context).primaryColor,
                                                   ),
-                                                  fillColor: Colors.black.withOpacity(0.1),
+                                                  fillColor: Colors.black.withValues(alpha: 0.1),
                                                   filled: true,
                                                   hintText: 'Date of birth',
                                                   hintStyle: GoogleFonts.kantumruyPro(
@@ -438,7 +439,7 @@ class ProfileScreen extends StatelessWidget {
                         ),
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                          color: Colors.pink.withOpacity(0.1),
+                          color: Colors.pink.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         child: _noteController.isGettingImportantNote
@@ -510,7 +511,7 @@ class ProfileScreen extends StatelessWidget {
                         ),
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor.withOpacity(0.1),
+                          color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         child: _noteController.isGettingNormalNote
@@ -579,7 +580,7 @@ class ProfileScreen extends StatelessWidget {
                         ),
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor.withOpacity(0.1),
+                          color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         child: _noteController.isGettingNotes
@@ -671,7 +672,9 @@ class ProfileScreen extends StatelessWidget {
                                 ),
                                 TextButton(
                                   onPressed: () {
-                                    _userController.signOut();
+                                    _userController.signOut().whenComplete(
+                                      () => Get.offAll(() => SignInScreen()),
+                                    );
                                   },
                                   child: Text(
                                     _userController.isSignningOut ? 'Signing out...' : 'Ok',
@@ -696,7 +699,7 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor.withOpacity(0.1),
+                      color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                     child: Row(
@@ -738,7 +741,7 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: Colors.red.withOpacity(0.1),
+                      color: Colors.red.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                     child: Row(

@@ -28,8 +28,8 @@ class AuthService {
     return null;
   }
 
-  // sign up
-  Future<UserModel?> signUp({
+  // sign up with email confirmation
+  Future<AuthResponse> signUp({
     required String email,
     required String password,
     String? displayName,
@@ -41,6 +41,7 @@ class AuthService {
       final response = await _client.auth.signUp(
         email: email,
         password: password,
+        emailRedirectTo: 'supabase.noteapp://confirm-email', // deep link for email confirmation
         data: {
           if (displayName != null) 'full_name': displayName,
           if (gender != null) 'gender': gender,
@@ -49,15 +50,12 @@ class AuthService {
         },
       );
 
-      if (response.user != null) {
-        return UserModel.fromSupabaseUser(response.user!);
-      }
-
-      return null;
+      // Return the full response so we can check if email confirmation is needed
+      return response;
     } catch (e) {
       _handleAuthException(e, 'Sign up failed');
+      rethrow;
     }
-    return null;
   }
 
   // update user 
@@ -86,6 +84,22 @@ class AuthService {
     } catch (e) {
       debugPrint('Oops! Failed to update user: 👉 $e');
       return null;
+    }
+  }
+
+  // resend email confirmation
+  Future<void> resendEmailConfirmation({
+    required String email,
+  }) async {
+    try {
+      await _client.auth.resend(
+        type: OtpType.signup,
+        email: email,
+        emailRedirectTo: 'supabase.noteapp://confirm-email',
+      );
+      debugPrint('Email confirmation resent to $email');
+    } catch (e) {
+      _handleAuthException(e, 'Failed to resend email confirmation');
     }
   }
 

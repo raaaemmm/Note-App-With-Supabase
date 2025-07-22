@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:note/controllers/notes/note_controller.dart';
 import 'package:note/models/user_model.dart';
 import 'package:note/services/auth_service.dart';
-import 'package:note/views/auths/sign_in_screen.dart';
 
 class UserController extends GetxController {
   
@@ -58,9 +57,8 @@ class UserController extends GetxController {
       // perform Sign Out logic
       await _authService.signOut();
 
-      // Go to the Sign-In screen
-      Get.offAll(() => SignInScreen());
       _currentUser = null;
+      update();
 
       showMessage(
         msg: 'Signed Out successfully!',
